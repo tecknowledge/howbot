@@ -57,7 +57,7 @@ speak_sleep = 25 # seconds
 nickname = 'phrack'
 ircserver = 'irc.freenode.net'
 ircport = 6667
-ircchannel = '#tkot'
+ircchannel = '#tkot,#tecknowledge'
 cmdchar = '!'
 
 verbose = 0
