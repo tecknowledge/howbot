@@ -1,5 +1,5 @@
 #!/usr/bin/python
-version = '0.1a'
+version = '0.1b'
 sourceurl = 'http://github.com/tecknowledge/howbot'
 
 # markov chain expression kit v.01
@@ -72,8 +72,8 @@ last_spoke = 0
 
 question_rate = 1
 
-inputfiles = ['/t/aesop.txt', '/t/fortunes.txt', '/t/thoreau.txt','/t/marktwain.txt', '/t/spyguide.txt','/t/realsocialdynamics-theblueprint.txt','/t/improvised.txt','/t/swfqw.txt', '/t/nasrudin.txt','/t/phrack.txt']
-
+inputfiles = ['/t/aesop.txt']
+#inputfiles = ['/t/aesop.txt', '/t/fortunes.txt', '/t/thoreau.txt','/t/marktwain.txt', '/t/spyguide.txt','/t/realsocialdynamics-theblueprint.txt','/t/improvised.txt','/t/swfqw.txt', '/t/nasrudin.txt','/t/phrack.txt']
 text = ''
 
 def signal_handler(signal, frame):
@@ -104,7 +104,7 @@ class MyBot(irc.IRCClient):
     self.starttime = time.time()
     
     self.data = { 'admins': admins,
-                  'auth': False,
+                  'noauth': True,
                   'cmds': [ 'stats','config','set','get','last','persona','google','search','version','remind','seen'],
                   'ignorelist': [],
                   'trigger': cmdchar,
@@ -176,7 +176,7 @@ class MyBot(irc.IRCClient):
         args = inp[1:] 
         val = ''
 
-        if self.data['auth'] == False or (user in self.data['admins']):
+        if self.data['noauth'] or user in self.data['admins']:
           if len(args):
             val = args[0]
           
