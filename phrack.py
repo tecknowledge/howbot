@@ -51,13 +51,13 @@ from textblob import TextBlob as tb
 from search import search,_search
 
 admins = ['cb','terbo']
-speak_rate = 10 # percentage
-speak_sleep = 50 # seconds
+speak_rate = 60 # percentage
+speak_sleep = 25 # seconds
 
 nickname = 'phrack'
 ircserver = 'irc.freenode.net'
 ircport = 6667
-ircchannel = '#tecknowledge'
+ircchannel = '#tkot'
 cmdchar = '!'
 
 verbose = 0
@@ -72,7 +72,7 @@ last_spoke = 0
 
 question_rate = 1
 
-inputfiles = ['/t/aesop.txt']
+inputfiles = ['/t/phrack.txt']
 #inputfiles = ['/t/aesop.txt', '/t/fortunes.txt', '/t/thoreau.txt','/t/marktwain.txt', '/t/spyguide.txt','/t/realsocialdynamics-theblueprint.txt','/t/improvised.txt','/t/swfqw.txt', '/t/nasrudin.txt','/t/phrack.txt']
 text = ''
 
@@ -176,7 +176,7 @@ class MyBot(irc.IRCClient):
         args = inp[1:] 
         val = ''
 
-        if self.data['noauth'] or user in self.data['admins']:
+        if self.data['noauth'] or (user in self.data['admins']):
           if len(args):
             val = args[0]
           
