@@ -72,7 +72,7 @@ last_spoke = 0
 
 question_rate = 1
 
-inputfiles = ['/t/phrack.txt']
+inputfiles = ['/t/aesop.txt','/t/thoreau.txt','/t/spyguide.txt','/t/swfqw.txt']
 #inputfiles = ['/t/aesop.txt', '/t/fortunes.txt', '/t/thoreau.txt','/t/marktwain.txt', '/t/spyguide.txt','/t/realsocialdynamics-theblueprint.txt','/t/improvised.txt','/t/swfqw.txt', '/t/nasrudin.txt','/t/phrack.txt']
 text = ''
 
@@ -113,7 +113,8 @@ class MyBot(irc.IRCClient):
                   'markov': markov_length,
                   'length': sent_length,
                   'tries': markov_tries,
-                  'persona': inputfiles,
+                  'self': True,
+                  'logging': True,
                   'last': 0,
                 }
     self.searchengines = ['duckduckgo', 'google', 'amazon', 'bbcnews', 'discogs', \
@@ -122,11 +123,12 @@ class MyBot(irc.IRCClient):
 
     self.log = []
     self.verbose = 0
-    self.logging = 1
     self.persona = inputfiles
     self.markovify = mark
     self.last_message = []
-    
+
+    self.userlist = []
+
     self.version = version
     self.sourceurl = sourceurl
 
@@ -158,11 +160,8 @@ class MyBot(irc.IRCClient):
   
       user = user.split('!', 1)[0]
       
-      if self.logging:
-        self.log.append({'timestamp': time.time(),
-                         'channel':channel,
-                         'user':user,
-                         'msg':msg})
+      if user not in self.userlist:
+        self.userlist.append(user)
 
       if self.verbose:
         print "%s:\t\t%s" % (user, msg)
@@ -192,8 +191,9 @@ class MyBot(irc.IRCClient):
           elif cmd == 'config':
             self.msg(channel, '(config) %s' % self.data )
 
-          #elif cmd == 'persona':
-          #  self.msg(channel, '(persona) %s' % self.data['persona'].replace('/t/','').replace('.txt','') )
+          elif cmd == 'persona':
+            persona = ', '.join([ x.replace('/t/','').replace('.txt','') for x in self.persona ])
+            self.msg(channel, '(persona) %s' % persona)
           
           elif cmd == 'set':
             if val in self.data:
@@ -217,8 +217,8 @@ class MyBot(irc.IRCClient):
             else:
               limit = 5
 
-            if len(self.log) > limit + 1:
-              start = self.log[-limit+1]
+            if len(self.log) > limit:
+              start = self.log[-limit]
             else:
               start = 0
 
@@ -274,6 +274,21 @@ class MyBot(irc.IRCClient):
         #print "%s:\t\t%s" % (self.nickname, output)
         self.msg(channel, str(output))
         self.data['last'] = time.time()
+      
+      
+      if self.data['logging']:
+        if self.data['redact']:
+          n = 0
+          for username in self.userlist:
+            n += 1
+            if msg.find(username) > -1:
+              msg.replace(username,'user_%d' % n)
+        
+        self.log.append({'timestamp': time.time(),
+                         'channel':channel,
+                         'user':'user_%s' % self.userlist.index(user),
+                         'msg':msg})
+
       
 class MyBotS(protocol.ClientFactory):
     protocol = MyBot
