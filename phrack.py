@@ -1,5 +1,5 @@
 #!/usr/bin/python
-version = '0.1b'
+version = '0.1c'
 sourceurl = 'http://github.com/tecknowledge/howbot'
 
 # markov chain expression kit v.01
@@ -72,7 +72,7 @@ last_spoke = 0
 
 question_rate = 1
 
-inputfiles = ['/t/aesop.txt','/t/thoreau.txt','/t/spyguide.txt','/t/swfqw.txt']
+inputfiles = ['/t/phrack.txt']
 #inputfiles = ['/t/aesop.txt', '/t/fortunes.txt', '/t/thoreau.txt','/t/marktwain.txt', '/t/spyguide.txt','/t/realsocialdynamics-theblueprint.txt','/t/improvised.txt','/t/swfqw.txt', '/t/nasrudin.txt','/t/phrack.txt']
 text = ''
 
