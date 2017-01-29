@@ -1,0 +1,8 @@
+#!/bin/bash
+
+BOT=$0
+CMDS=$(grep 'if cmd ==' ${BOT}.py |sed s/.\*==\ //| sed s/\'//g|sed s/://g|sort)
+
+echo "$CMDS" > bot.cmds
+
+python ${BOT}.py ${BOT}.cfg

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-version = '0.1c'
+version = '0.1d'
 sourceurl = 'http://github.com/tecknowledge/howbot'
 
 # markov chain expression kit v.01
@@ -46,35 +46,14 @@ import markovify
 from markovify import Chain
 from markovify import Text
 
-import json
-from textblob import TextBlob as tb
-from search import search,_search
+#from search import search,_search
 
-admins = ['cb','terbo']
-speak_rate = 60 # percentage
-speak_sleep = 25 # seconds
+from yaml import load, dump
 
-nickname = 'phrack'
-ircserver = 'irc.freenode.net'
-ircport = 6667
-ircchannel = '#tkot,#tecknowledge'
-cmdchar = '!'
-
-verbose = 0
-logging = 1
-
-markov_length = 1
-markov_ratio = .7
-markov_overlap = 15
-sent_length = 60
-markov_tries = 100
-last_spoke = 0
-
-question_rate = 1
-
-inputfiles = ['/t/phrack.txt']
-#inputfiles = ['/t/aesop.txt', '/t/fortunes.txt', '/t/thoreau.txt','/t/marktwain.txt', '/t/spyguide.txt','/t/realsocialdynamics-theblueprint.txt','/t/improvised.txt','/t/swfqw.txt', '/t/nasrudin.txt','/t/phrack.txt']
-text = ''
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
 
 def signal_handler(signal, frame):
     print('Exit recieved..')
@@ -83,7 +62,6 @@ def signal_handler(signal, frame):
     sys.exit(1)
 
 signal.signal(signal.SIGINT, signal_handler)
-
 
 def punct():
   """ return random punctuation """
@@ -103,27 +81,16 @@ class MyBot(irc.IRCClient):
     
     self.starttime = time.time()
     
-    self.data = { 'admins': admins,
-                  'noauth': True,
-                  'cmds': [ 'stats','config','set','get','last','persona','google','search','version','remind','seen'],
-                  'ignorelist': [],
-                  'trigger': cmdchar,
-                  'rate': speak_rate,
-                  'sleep': speak_sleep,
-                  'markov': markov_length,
-                  'length': sent_length,
-                  'tries': markov_tries,
-                  'self': True,
-                  'logging': True,
-                  'last': 0,
-                }
+    self.irc = config['irc']
+    self.persona = config['persona']
+    self.markov = config['markov']
+    self.speak = config['speak']
+
     self.searchengines = ['duckduckgo', 'google', 'amazon', 'bbcnews', 'discogs', \
                'piratebay', 'wolfram', 'youtube', 'stack', 'acronym', \
                'bing', 'rfc', 'scholar']
 
     self.log = []
-    self.verbose = 0
-    self.persona = inputfiles
     self.markovify = mark
     self.last_message = []
 
@@ -131,16 +98,23 @@ class MyBot(irc.IRCClient):
 
     self.version = version
     self.sourceurl = sourceurl
+    self.lastspoke = 0
 
+    self.cmds = open('bot.cmds','r').read().split('\n')
+    
     print 'Got ' + str(len(self.markovify.chain.model)) + ' chains'
 
-    self.nickname = nickname or 'howdy'
+    self.nickname = self.irc['nickname']
     print 'launching `%s`' % (self.nickname)
     return
 
   def _get_nickname(self):
       return self.factory.nickname
-  
+
+  #def connectionMade(self):
+  #    self.nickname = self.nickname
+  #    self.realname = self.irc['realname']
+  #    super(self).irc.IRCClient.connectionMade(self)
 
   def signedOn(self):
       self.join(self.factory.channel)
@@ -163,103 +137,35 @@ class MyBot(irc.IRCClient):
       if user not in self.userlist:
         self.userlist.append(user)
 
-      if self.verbose:
-        print "%s:\t\t%s" % (user, msg)
+      if self.irc['verbose']:
+        print '%s <%s:%s> %s' % ( dt.datetime.now().strftime('%T') , channel, user, msg )
 
-      if msg[0] == self.data['trigger'] and len(msg) > 2:
-        
-        inp = msg[1:].split(' ')
-        
-        args = inp[1:] 
-        cmd = inp[0]
-        args = inp[1:] 
-        val = ''
-
-        if self.data['noauth'] or (user in self.data['admins']):
-          if len(args):
-            val = args[0]
-          
-          if cmd == 'help':
-            self.msg(channel, '(commands): %s' % ( self.data['cmds'] ) )
-         
-          if cmd == 'version':
-            self.msg(channel, '[TK]: howbot v%s %s' % ( self.version, self.sourceurl ) )
-
-          if cmd == 'stats':
-            self.msg(channel, '(stats) recorded %d lines since %s' % ( len(self.log),
-                                   dt.datetime.fromtimestamp(self.starttime).strftime('%F %T') ) )
-          elif cmd == 'config':
-            self.msg(channel, '(config) %s' % self.data )
-
-          elif cmd == 'persona':
-            persona = ', '.join([ x.replace('/t/','').replace('.txt','') for x in self.persona ])
-            self.msg(channel, '(persona) %s' % persona)
-          
-          elif cmd == 'set':
-            if val in self.data:
-              oldval = self.data[val]
-              self.data[val] = " ".join(args)
-              newval = self.data[val]
-              
-              self.msg(channel, '(set) updated "%s" from "%s" to "%s" (%s)' % ( val, oldval, newval, user ) )
-          
-          elif cmd == 'get':
-            self.msg(channel, '"%s" is set to "%s"' % ( val, self.data[val] ) )
-          
-          elif cmd == 'seen':
-            pass
-          elif cmd == 'last':
-            self.msg(channel, '%s (repost)' % ( self.last_message ) )
-
-          elif cmd == 'log':
-            if val:
-              limit = val
-            else:
-              limit = 5
-
-            if len(self.log) > limit:
-              start = self.log[-limit]
-            else:
-              start = 0
-
-            for i in range(len(self.log[-limit]), len(self.log) - 1):
-              log = self.log[i]
-              self.msg(user, '%s <%s:%s> %s' % ( dt.datetime.fromtimestamp(log['timestamp']).strftime('%T'),
-                                                 log['channel'], log['user'], log['msg']) )
-              
-          #elif cmd == 'google':
-          #  self.msg(channel,'%s' % ( _search(' '.join(args))))
+      if msg[0] == self.irc['trigger'] and len(msg) > 2:
+        self.handle_command(channel, user, msg)
             
-      if random.randint(0,200) <= question_rate and user not in self.data['ignorelist']:
+      if random.randint(0,200) <= self.speak['question'] and user not in self.irc['ignorelist']:
         out = re.sub(r'[^A-Za-z0-9]','',msg.split()[-1]) + '?'
-        #print self.nickname + ":\t\t" + out
-        self.data['last'] = time.time()
-        return self.say(channel,out)
-      
-      if msg.find(self.nickname) > 1 or (random.randint(0,100) <= self.data['rate'] and \
-        (time.time() - self.data['last'] > self.data['sleep'])):
         
-        for x in xrange(markov_tries):
-          markovText = self.markovify.make_short_sentence(sent_length,
-                                              max_overlap_total=markov_overlap,
-                                              max_overlap_ratio=markov_ratio,
-                                              tries=markov_tries)
+        if self.irc['verbose']:
+          print '%s <%s:%s> %s' % ( dt.datetime.now().strftime('%T') , channel, self.nickname, out )
+        
+        self.lastspoke = time.time()
+        self.say(channel,out)
+      
+      if msg.find(self.nickname) > 1 or (random.randint(0,100) <= self.speak['rate'] and \
+        (time.time() - self.lastspoke > self.speak['sleep'])):
+        
+        for x in xrange(self.markov['tries']):
+          markovText = self.markovify.make_short_sentence(self.markov['length'],
+                                              max_overlap_total=self.markov['overlap'],
+                                              max_overlap_ratio=self.markov['ratio'],
+                                              tries=self.markov['tries'])
           if not markovText or len(markovText) <= 5:
             pass
+          
           txt = re.sub(r'[^A-Za-z\s]','',markovText)
           txt = re.sub(r'\s+',' ',txt)
           txt = txt.split()
-
-          #if len(self.last_message) > 2:
-          #  for x in txt:
-          #    if rhymes(x, self.last_message[-1]):
-          #      break
-              #if rhymes(self.last_message[0], txt[0]) or \
-              #rhymes(self.last_message[-1], txt[-1]) or \
-              #rhymes(self.last_message[0], txt[-1]) or \
-              #rhymes(self.last_message[-1], txt[0]):
-              #print 'rhyme...'
-              #break
 
         output = re.sub(r'\s*[?.!]?$','', markovText)
         output = re.sub(r'\s,','',output)
@@ -271,13 +177,17 @@ class MyBot(irc.IRCClient):
           output = user + random.choice([':',' -',',']) + ' ' + output
 
         self.last_message = output
-        #print "%s:\t\t%s" % (self.nickname, output)
+      
+        if self.irc['verbose']:
+          print '%s <%s:%s> %s' % ( dt.datetime.now().strftime('%T') , channel, self.nickname, output )
+
         self.msg(channel, str(output))
-        self.data['last'] = time.time()
+        self.lastspoke = time.time()
       
       
-      if self.data['logging']:
-        if self.data['redact']:
+      # need to juse use logging and file rotator ..
+      if self.irc['logging']:
+        if self.irc['redact']:
           n = 0
           for username in self.userlist:
             n += 1
@@ -288,18 +198,83 @@ class MyBot(irc.IRCClient):
                          'channel':channel,
                          'user':'user_%s' % self.userlist.index(user),
                          'msg':msg})
-
+        
+  def handle_command(self, channel, user, msg):
+    inp = msg[1:].split(' ')
       
+    args = inp[1:] 
+    cmd = inp[0]
+    val = ''
+
+    if self.irc['noauth'] or (user in self.irc['admin']):
+      if len(args):
+        val = args[0]
+      
+      if cmd == 'help':
+        self.msg(user, '(commands): %s' % ( self.cmds ) )
+     
+      if cmd == 'version':
+        self.msg(channel, '[TK]: howbot v%s %s' % ( self.version, self.sourceurl ) )
+
+      if cmd == 'stats':
+        self.msg(channel, '(stats) recorded %d lines since %s' % ( len(self.log),
+                               dt.datetime.fromtimestamp(self.starttime).strftime('%F %T') ) )
+      elif cmd == 'setup':
+        self.msg(channel, '(speaking setup) %s' % self.speak )
+      
+      elif cmd == 'config':
+        self.msg(user, '(config) %s' % self.cfg )
+
+
+      elif cmd == 'persona':
+        persona = ', '.join([ x for x in self.persona ])
+        self.msg(channel, '(persona) %s' % persona)
+      
+      elif cmd == 'set':
+        if val in self.data:
+          oldval = self.data[val]
+          self.data[val] = " ".join(args)
+          newval = self.data[val]
+          
+          self.msg(channel, '(set) updated "%s" from "%s" to "%s" (%s)' % ( val, oldval, newval, user ) )
+      
+      elif cmd == 'get':
+        self.msg(channel, '"%s" is set to "%s"' % ( val, self.data[val] ) )
+      
+      elif cmd == 'seen':
+        pass
+      elif cmd == 'last':
+        self.msg(channel, '%s (repost)' % ( self.last_message ) )
+
+      elif cmd == 'log':
+        if val:
+          limit = val
+        else:
+          limit = 5
+
+        if len(self.log) > limit:
+          start = self.log[-limit]
+        else:
+          start = 0
+
+        for i in range(len(self.log[-limit]), len(self.log) - 1):
+          log = self.log[i]
+          self.msg(user, '%s <%s:%s> %s' % ( dt.datetime.fromtimestamp(log['timestamp']).strftime('%T'),
+                                             log['channel'], log['user'], log['msg']) )
+
 class MyBotS(protocol.ClientFactory):
     protocol = MyBot
 
-    def __init__(self, channel, nickname):
+    def __init__(self, channel, nickname, realname, config, chain):
+        self.cfg = config
         self.channel = channel
         self.nickname = nickname
+        self.realname = realname
+        self.markovify = chain
         
     def clientConnectionLost(self, connector, reason):
         print "Lost connection (%s), reconnecting." % (reason,)
-        time.sleep(speak_sleep * 3)
+        time.sleep(config['speak']['sleep'] * 3)
         connector.connect()
 
     def clientConnectionFailed(self, connector, reason):
@@ -316,26 +291,26 @@ class MyBotS(protocol.ClientFactory):
        self.join(params[2])
 
 if __name__ == "__main__":
-  if(os.access(nickname+'.json',os.F_OK)):
-    print 'reading json ..'
-    with open(nickname + '.json') as f:
-      json = f.read()
-    print 'got ' + str(len(json)) + ' bytes.'
-    print 'reading text ..'
-    for f_ in inputfiles:
-      with open(f_) as f:
-        text += f.read()
-    print 'got ' + str(len(text)) + ' bytes.'
-    mychain = Chain(corpus=None, state_size=markov_length, model=Chain.from_json(json).model)
-    mark = markovify.Text(input_text=text, state_size=markov_length, chain=mychain)
-  else:
-    print 'reading text ..'
-    for f_ in inputfiles:
-      with open(f_) as f:
-        text += f.read()
-    print 'got ' + str(len(text)) + ' bytes.'
-    mark = markovify.Text(text, state_size=markov_length)
+  botcfg = os.path.basename(sys.argv[0].replace('.py','.cfg'))
+ 
+  print 'Using %s config' % botcfg
+  config = load(open(botcfg))
+  
+  print 'personas: ',
+  
+  text = ''
+  
+  for f_ in config['persona'].values():
+    with open(f_) as f:
+      print '%s ' % f_,
+      text += f.read()
+  
+  print '-- got ' + str(len(text)) + ' bytes.'
+  
+  mark = markovify.Text(text)
 
-  s = {}
-  reactor.connectTCP(ircserver, ircport,  MyBotS(ircchannel,nickname))
+  irc = config['irc'] 
+  
+  reactor.connectTCP(irc['server'], irc['port'],
+    MyBotS(irc['channel'], irc['nickname'], irc['realname'], config, mark) )
   reactor.run()
