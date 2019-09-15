@@ -1,0 +1,33 @@
+deamon:     false
+verbose:    true
+logging:    true
+logfile:    false
+ircport:    6667
+nickname:   howbot
+realname:   how do ya do
+usermode:   '+i'
+ircserver:  127.0.0.1
+ircchannel: '#test'
+cmdchar:    '!'
+log_limit:  120
+ignore_list:
+  - howbot
+
+save_rate:  0
+save_log:   1
+
+rate:       60   # percentage
+sleep:      45  # seconds
+chainsize:  1 # 1-3
+ratio :     .7
+overlap:    15
+length:     60
+words:      15
+tries:      100
+question_rate:   1
+question_max: 300
+
+admins:
+
+brain:
+  - fortunes.txt
