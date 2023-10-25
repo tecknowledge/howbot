@@ -1,5 +1,5 @@
 Unidecode==1.0.23
 textacy==0.9.1
-Twisted==19.7.0
+Twisted==23.8.0
 pyaml==19.4.1
 spacy==2.1.8
