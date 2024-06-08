@@ -1,3 +1,7 @@
+Old Readme:
+
+Sep 14, 2019
+
 #howbot 0.2a
 
 the local drunkbot and cosmic relief
