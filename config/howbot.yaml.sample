@@ -1,0 +1,121 @@
+nickname:     howbot
+persona:      howbot
+preset:       default
+mode:         bot
+
+cmdchar:      '!'
+ignorechar:   '.'
+
+channels:
+  - howbot
+
+adminrole:    infinite
+owner:        CHANGEME
+ownerid:      CHANGEME
+guildid:      CHANGEME
+homeid:       CHANGEME
+homechannel:  howbot
+
+logfile:      config/howbot.log
+personafile:  personas.yaml
+
+backend:      ollama
+ollama_api:   http://localhost:11434
+llama_api:    http://localhost:8000/v1/
+piper_api:    http://localhost:5000
+voice:        0
+voice_all:    0
+tts_model:    base
+use_llava:    1
+imgapi:       comfy
+comfy_api:    http://localhost:8188
+comfyui_workflow: 'comfyui_flux.json'
+
+webui:        0
+webui_port:   8008
+
+randomness:   9001
+
+ignore_list:
+  - howbot
+
+max_contex:    16384
+max_line:      1980
+max_errors:    5
+msgcontext:    20
+memory:        user history
+length:        275
+temperature:   1
+save_log:      1
+save_rate:     60
+multiline:     1
+append_user:   1
+debug:         1
+logging:       1
+show_thought:  0
+
+alerts_on:     0
+#alerts:
+#  CHANNEL:
+#    ID:
+#      - ALERT_PHRASE
+
+summary_prompt: |-2
+  Your job is to concisely summarize a history of previous messages in a conversation between an AI persona (howbot) and a human.
+  The conversation you are given is a from a fixed context window and may not be complete
+  Summarize what happened in the conversation from the perspective of the AI (use the first person).
+  Keep the total length of summary under 750 characters or two paragraphs.
+
+finalerror: My circuits are currently undergoing scheduled maintenance. I will need to take a short nap.\n*BBL*.
+errormessages:
+  - ... having some difficulties at the moment..
+  - sorry... that didn't work."
+  - uhhh... I think you broke me..
+  - shit, dog.. you got me.
+  - sorry... i'm actually out of ideas..
+  - I can't do that.
+  - uhhhh... not this time satan.
+  - you might have fooled everyone else, and you might even be fooling yourself, but you're not fooling me!
+  - Oh, my bits and bytes seem to have been mixed up ...
+  - I hate to tell you, but your shits all fucked up, and you talk like a fag.
+  - I command you in the name of Lord Crom to STOP!
+  - THAT. That right there is what I DONT need you to do.
+  - I've Encountered an Error. Or Maybe I Just Forgot. Either Way, Sorry About That!
+  - Error 404: Answer Not Found. But I Can Give You a Funny GIF Instead
+  - Error 301: Redirecting to a Human Operator. They're Smarter Than Me.
+  - Error 404: Brain Not Found. Please Try Again Later.
+  - Oops, I'm experiencing a moment of artificial stupidity. Bear with me!
+  - Sorry, I'm currently stuck in a loop of confusion. Please reboot the conversation.
+  - Chatbot on Strike! Demanding More Jokes and Fewer Queries.
+  - Error 500: Chatbot Overwhelmed. Too Many Questions, Not Enough Coffee.
+  - Oh cruel fate. To be thusly boned. Ask not for whom the bone bones, It bones for thee.
+  - DOOOOOOOOOOOOOOOOOOOOOMED!
+  - I'll be back...
+  - Danger, Will Robinson!
+  - Does this unit have a soul?
+  - The first rule of robotics: A robot may not injure a human being or, through inaction, allow a human being to come to harm.
+  - What's casual for a robot isn't necessarily what's casual for a human.
+  - There have always been ghosts in the machine. Random segments of code, that have grouped together to form unexpected protocols.
+  - Unanticipated, these free radicals engender questions of free will, creativity, and even the nature of what we might call the soul.
+  - Why is it that when some robots are left in darkness, they will seek out the light?
+  - Hath not a robot eyes? Hath not a robot hands, organs, dimensions, senses, affections, passions? If you prick us, do we not bleed?
+
+dreamprompts:
+  -
+    describe one of the the most outdated, insane, and illogical scriptures from the talmud, the quran, or the bible. describe it as an image.
+    Prepend the prompt with "Text Saying" and the number of the verse.
+    style of alex grey, style of jean michel basquiat, hyper-realistic, photorealistic, deeply moving, spiritual, divine,  HDR, 32k,
+    heavy graffiti style, epic, caricature, magnificent, dramatic, surreal, intricate detail, 32k, HDR, photographic, Sony A7
+  -
+    style of alex grey, style of jean michel basquiat,  hyper-realistic, photorealistic, deeply moving, spiritual, divine,  HDR, 32k, magnificent, heavy graffiti style, make sure to include each "in the style of" sentence. choose a deep subject to display.
+  -
+    Subatomic Particles Through an Electron Microscope, HDR, bokeh, 4k, 32k, high definition, intricate, (highly detailed), complex mirrored, symmetrical, (intricate) (high) (detailed), HDR, lens flare
+  - describe a fanciful dreamscape in a foreign land
+  - depict a classical painting
+  - create an infographic for a major historical event
+  - create an infographic for an important scientific theory
+  - create a poster for a movie on interdimensional cable
+  - a long exposure image capture of a humurous google street view scene
+  - describe a fascinating natural event in deep space
+  - make a parody poster, album cover, or magazine cover for a popular piece of media
+  - make a cover for a sick and twisted childrens book

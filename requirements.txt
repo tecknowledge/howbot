@@ -1,5 +1,40 @@
-Unidecode==1.0.23
-textacy==0.9.1
-Twisted==19.7.0
-pyaml==19.4.1
-spacy==2.1.8
+# Base
+pyyaml
+#git+https://github.com/Rapptz/discord.py
+json_repair
+pillow
+
+# LLM APIs
+openai
+ollama
+
+# Voice
+#piper
+#PyNaCl
+#openai-whisper
+#discord-ext-voice-recv
+#lameenc
+
+# Text processing
+bs4
+#nltk
+#txtai
+emoji
+spacy
+humanize
+#chromadb
+#sqlite-vss
+#pytesseract
+
+# Network
+langchain_community
+#youtube_transcript_api
+#yt_dlp
+#asyncpraw
+#gtrending
+#huggingface_hub
+
+#webuiapi
+#inscriptis
+#pymemgpt
+#discord.py[voice]

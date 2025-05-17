@@ -1,45 +1,74 @@
-#howbot 0.2a
+# howbot - the local drunkbot
 
-the local drunkbot and cosmic relief
+Updated to work with discord and ollama.
+Full documentation to come.
 
-Based on the markovify library - http://github.com/jsvine/markovify
+*WORK IN PROGRESS, wait for next version*
 
-Now python 3 compatible and includes parts of speech text filter from taggedtext.py - https://joshuanewlan.com/spacy-and-markovify
+## FEATURES
 
-Also regularly updates and saves the markov chain to gzipped JSON
+Howbot chats on discord, connecting to either ollama or OpenAI API's.
+Essentially it works like ChatGPT but over discord.
 
-And reads its configuration from yaml, or its brain from a tagged spacy/textacy document corpus
-
-Also uses a slightly modified markovify library
-
-Have fun
-
-#use
-
-edit the yaml file, but you don't have to add anything to the brain: line
-
-launch howbot.py [yaml file] [input:text, textacy corpus, gzipped json markov chain]
-
-this only has to be done once. if you change the name of the yaml file in howbot.py
-it doesn't need to be specified. and after it reads the corpus files, it saves them
-to json so they only need to be specified once. you can later add more files this way
-or [soon] during runtime or switch brains.
-
-So after that, just run howbot.py howbot.yaml howbot.json.gz
+It can generate images through Stable Diffusion, search the web with SearX,
+look at images, summarize youtube videos, and more.
 
 
-Other bots of distinguish:
+## INSTALLATION
 
-https://github.com/Agade09/CGBot2 / https://www.codingame.com/blog/markov-chain-automaton2000/ - CGBot, uses techniques to reduce markov memory size
+1. Create a discord bot via [Discord Developer Portal](https://discord.com/developers/applications)
+2. Add discord token to `.token-discord`
+3. Edit `config/{botname}.yaml.sample` and rename to `config/{botname}.yaml`
+4. `uv venv --python=3.11` then `source .venv/bin/activate`
+5. Run `python howbot.py`
 
-https://github.com/gunthercox/ChatterBot - chatterbot, uses neural net for generation
+### Dependencies
 
-https://github.com/capnrefsmmat/seuss - the rhyming bot from the future
+Right now the `requirements.txt` is full of various functionality that will be honed down.
 
-https://github.com/cjones/madcow - good utility bot, megahal is funny, lots of functions
+For web search functionality, searx is required. A remote search URL can be used.
+The ComfyUI image generation tool uses the Flux Dev/Schnell model, a LoRA, and a few extensions.
 
-https://github.com/spion/triplie-ng - another type of markov/ai implementation
+### Usage
 
-https://github.com/bingos/gumbybrain
+Bot commands are prefixed with `!`:
+  `!model` changes LLM models, `!models` lists models available through ollama
+  `!personas` lists system prompts, `!persona` sets the prompt
+  `!draw` generates an image over comfyui
+  `!serverinfo` shows discord server info
+  `!set` shows bot settings
+  `!help` shows (to-be updated) help text.
+  `!video` summarizes a youtube video
+  `!search` and `!google` (_being moved to ollama tools_).
 
-http://lcamtuf.coredump.cx/c3.shtml - Don't let the age fool you! Its one of the most innovative bots in terms of approach - most of the other bots have a fixed source of input, this bot is more inquisitive... :)
+#### Models
+
+_Qwen3 14b is the recommended language model due to it's tool following.
+and Gemma3 4b/MiniCPM is recommended for visual reasoning._
+
+Mistral Small 3.1 comes in second.
+
+#### Personas
+
+System prompts (personas) are stored in `personas.yaml`.
+The current format is `[name]: [system prompt]`.
+
+The following variables will be interpreted in system prompts:
+  `{bot}`:  the bots nickname
+  `{user}`: the speaking users nickname
+  `{time}`: the current time
+  `{date}`: the current date
+
+#### ComfyUI
+
+To generate images with stable diffusion (koboldcpp coming), ...
+
+Commands:
+  `{draw}`: generate an image. settings are indicated with `@`:
+            * `@num=2` `@steps=20` `@model=fast` `@lora=<lora path>`
+            * `@aspect=[wide|portrait|square]` `@cfg=[1-7]` `@seed=31337` `@detail=0.20` (detail daemon)
+  `{imagine}`: generates an image by enhancing the prompt and choosing the aspect ratio/style.
+  `{drawall}`: continually generates images until the mode is changed from `repeat`
+
+
+More to come soon..

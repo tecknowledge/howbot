@@ -1,0 +1,245 @@
+contrastive:
+  do_sample: False
+  early_stopping: True
+  length_penalty: 1.4
+  min_length: 200
+  no_repeat_ngram_size: 2
+  num_beams: 10
+  penalty_alpha: 0.6
+  repetition_penalty: 4.5
+  temperature: 0.7
+  top_k: 4
+  top_p: 0.92
+  typical_p: 1.0
+
+default:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.2
+  temperature: 0.7
+  top_k: 40
+  top_p: 0.5
+  typical_p: 1
+
+deterministic:
+  do_sample: False
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1
+  temperature: 1
+  top_k: 50
+  top_p: 1
+  typical_p: 1
+
+godlike:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.1
+  temperature: 0.7
+  top_k: 0
+  top_p: 0.5
+  typical_p: 0.19
+
+llamap:
+  do_sample: True
+  temperature: 0.7
+  top_p: 0.1
+  top_k: 40
+  typical_p: 1
+  repetition_penalty: 1.18
+
+individual:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.08
+  temperature: 1.39
+  top_k: 50
+  top_p: 0.9
+  typical_p: 0.2
+
+liminaldrift:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.1
+  temperature: 0.66
+  top_k: 0
+  top_p: 1.0
+  typical_p: 0.6
+
+nai-bestguess:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.15
+  temperature: 0.8
+  top_k: 100
+  top_p: 0.9
+  typical_p: 1.0
+
+nai-decadence:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1
+  temperature: 2
+  top_k: 100
+  top_p: 1.0
+  typical_p: 0.97
+
+nai-genesis:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.05
+  temperature: 0.63
+  top_k: 0
+  top_p: 0.98
+  typical_p: 1.0
+
+nai-lyc:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.15
+  temperature: 2
+  top_k: 12
+  top_p: 0.85
+  typical_p: 1.0
+
+nai-ouroboros:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.05
+  temperature: 1.07
+  top_k: 100
+  top_p: 1.0
+  typical_p: 1.0
+
+nai-pleasing:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.15
+  temperature: 0.44
+  top_k: 0
+  top_p: 1.0
+  typical_p: 1.0
+
+nai-spinxmoth:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.15
+  temperature: 2.0
+  top_k: 30
+  top_p: 0.18
+  typical_p: 1.0
+
+nai-storywriter:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.1
+  temperature: 0.72
+  top_k: 0
+  top_p: 0.73
+  typical_p: 1.0
+
+naive:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.1
+  temperature: 0.7
+  top_k: 50
+  top_p: 0.85
+  typical_p: 1.0
+
+pygmalion:
+  do_sample: True
+  early_stopping: False
+  length_penalty: 1
+  min_length: 0
+  no_repeat_ngram_size: 0
+  num_beams: 1
+  penalty_alpha: 0
+  repetition_penalty: 1.1
+  temperature: 0.5
+  top_k: 0
+  top_p: 0.9
+  typical_p: 1.0
+
+verbose:
+  do_sample: True
+  early_stopping: True
+  length_penalty: 1.4
+  min_length: 200
+  no_repeat_ngram_size: 2
+  num_beams: 10
+  penalty_alpha: 0
+  repetition_penalty: 4.5
+  temperature: 0.7
+  top_k: 150
+  top_p: 0.92
+  typical_p: 1.0

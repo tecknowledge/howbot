@@ -1,0 +1,290 @@
+{
+  "7": {
+    "inputs": {
+      "samples": [
+        "45",
+        0
+      ],
+      "vae": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "8": {
+    "inputs": {
+      "vae_name": "flux.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "20": {
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "28": {
+    "inputs": {
+      "clip_name1": "t5xxl_fp8_e4m3fn.safetensors",
+      "clip_name2": "clip_l.safetensors",
+      "type": "flux",
+      "device": "default"
+    },
+    "class_type": "DualCLIPLoader",
+    "_meta": {
+      "title": "DualCLIPLoader"
+    }
+  },
+  "34": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "7",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "36": {
+    "inputs": {
+      "model_type": "flux",
+      "rel_l1_thresh": 0.4000000000000001,
+      "max_skip_steps": 3,
+      "model": [
+        "41",
+        0
+      ]
+    },
+    "class_type": "TeaCache",
+    "_meta": {
+      "title": "TeaCache"
+    }
+  },
+  "38": {
+    "inputs": {
+      "text_positive": "a masculine elon musk cross dressing, taking a selfie, in a busy times square. over his head is the text \"we're back baby!\"",
+      "text_negative": "",
+      "style": "base",
+      "log_prompt": "No",
+      "style_name": ""
+    },
+    "class_type": "SDXLPromptStyler",
+    "_meta": {
+      "title": "SDXL Prompt Styler"
+    }
+  },
+  "39": {
+    "inputs": {
+      "clip_l": "a masculine elon musk cross dressing, taking a selfie, in a busy times square. over his head is the text \"we're back baby!\"",
+      "t5xxl": [
+        "38",
+        0
+      ],
+      "guidance": 3.5,
+      "clip": [
+        "41",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncodeFlux",
+    "_meta": {
+      "title": "CLIPTextEncodeFlux"
+    }
+  },
+  "40": {
+    "inputs": {
+      "toggle": true,
+      "mode": "simple",
+      "num_loras": 2,
+      "lora_1_name": "flux/aidmaMJ6.1-FLUX-v0.5.safetensors",
+      "lora_1_strength": 0.8500000000000002,
+      "lora_1_model_strength": 1.0000000000000002,
+      "lora_1_clip_strength": 1.0000000000000002,
+      "lora_2_name": "None",
+      "lora_2_strength": 1.0000000000000002,
+      "lora_2_model_strength": 1.0000000000000002,
+      "lora_2_clip_strength": 1.0000000000000002,
+      "lora_3_name": "None",
+      "lora_3_strength": 1.0000000000000002,
+      "lora_3_model_strength": 1.0000000000000002,
+      "lora_3_clip_strength": 1.0000000000000002,
+      "lora_4_name": "None",
+      "lora_4_strength": 1.0000000000000002,
+      "lora_4_model_strength": 1.0000000000000002,
+      "lora_4_clip_strength": 1.0000000000000002,
+      "lora_5_name": "None",
+      "lora_5_strength": 1.0000000000000002,
+      "lora_5_model_strength": 1.0000000000000002,
+      "lora_5_clip_strength": 1.0000000000000002,
+      "lora_6_name": "None",
+      "lora_6_strength": 1.0000000000000002,
+      "lora_6_model_strength": 1.0000000000000002,
+      "lora_6_clip_strength": 1.0000000000000002,
+      "lora_7_name": "None",
+      "lora_7_strength": 1.0000000000000002,
+      "lora_7_model_strength": 1.0000000000000002,
+      "lora_7_clip_strength": 1.0000000000000002,
+      "lora_8_name": "None",
+      "lora_8_strength": 1.0000000000000002,
+      "lora_8_model_strength": 1.0000000000000002,
+      "lora_8_clip_strength": 1.0000000000000002,
+      "lora_9_name": "None",
+      "lora_9_strength": 1.0000000000000002,
+      "lora_9_model_strength": 1.0000000000000002,
+      "lora_9_clip_strength": 1.0000000000000002,
+      "lora_10_name": "None",
+      "lora_10_strength": 1.0000000000000002,
+      "lora_10_model_strength": 1.0000000000000002,
+      "lora_10_clip_strength": 1.0000000000000002
+    },
+    "class_type": "easy loraStack",
+    "_meta": {
+      "title": "EasyLoraStack"
+    }
+  },
+  "41": {
+    "inputs": {
+      "lora_stack": [
+        "40",
+        0
+      ],
+      "model": [
+        "42",
+        0
+      ],
+      "optional_clip": [
+        "28",
+        0
+      ]
+    },
+    "class_type": "easy loraStackApply",
+    "_meta": {
+      "title": "Easy Apply LoraStack"
+    }
+  },
+  "42": {
+    "inputs": {
+      "unet_name": "flux1-dev.safetensors",
+      "weight_dtype": "fp8_e4m3fn",
+      "device": "cuda:0"
+    },
+    "class_type": "UNETLoaderMultiGPU",
+    "_meta": {
+      "title": "UNETLoaderMultiGPU"
+    }
+  },
+  "44": {
+    "inputs": {
+      "detail_amount": 0.10000000000000002,
+      "start": 0.25000000000000006,
+      "end": 0.8000000000000002,
+      "bias": 0.5,
+      "exponent": 1,
+      "start_offset": 0,
+      "end_offset": 0,
+      "fade": 0,
+      "smooth": true,
+      "cfg_scale_override": 0,
+      "sampler": [
+        "43:1",
+        0
+      ]
+    },
+    "class_type": "DetailDaemonSamplerNode",
+    "_meta": {
+      "title": "Detail Daemon Sampler"
+    }
+  },
+  "45": {
+    "inputs": {
+      "noise": [
+        "43:0",
+        0
+      ],
+      "guider": [
+        "43:3",
+        0
+      ],
+      "sampler": [
+        "44",
+        0
+      ],
+      "sigmas": [
+        "43:2",
+        0
+      ],
+      "latent_image": [
+        "20",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "43:0": {
+    "inputs": {
+      "noise_seed": 623202617847693
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "43:1": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "43:2": {
+    "inputs": {
+      "scheduler": "beta",
+      "steps": 10,
+      "denoise": 1,
+      "model": [
+        "36",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "43:3": {
+    "inputs": {
+      "model": [
+        "36",
+        0
+      ],
+      "conditioning": [
+        "39",
+        0
+      ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "BasicGuider"
+    }
+  }
+}

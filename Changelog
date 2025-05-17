@@ -1,0 +1,18 @@
+0.5:
+
+05/16/25
+tool_comfyui: Changed styles to a list in config/prompts.yaml, list concatenated to style prompt, then verified
+              Workflow also verified
+
+~01/12/24
+0.4d: License change, rewrite script structure (import howbot and import config),
+      Tool usage, removal of functions that will be replaced or are non-functioning
+
+~02/12/23
+0.3: Discord and llama.cpp support, complete code-base rewrite
+
+14/09/19
+0.2a: Python 3 support
+
+12/28/15
+0.01: Markov based IRC bot
